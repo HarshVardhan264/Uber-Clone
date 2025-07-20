@@ -117,3 +117,67 @@ In case of authentication errors, the response will contain an errors array with
   ]
 }
 ```
+
+# `/users/profile` Endpoint Documentation
+
+## Description
+The `/users/profile` endpoint allows an authenticated user to retrieve their profile information. The user is authenticated via a JWT token supplied in cookies or the Authorization header.
+
+## HTTP Method
+`GET`
+
+## Endpoint
+`/users/profile`
+
+## Authorization
+A valid JWT token must be provided either as a cookie (`token`) or in the `Authorization` header as a Bearer token.
+
+## Successful Response
+
+A successful response returns the authenticated user's profile data (excluding the password).  
+
+```json
+{
+  "_id": "userID",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": "if available"
+}
+```
+
+## Error Response
+
+In case the user is not authenticated or the token is invalid, the response will be:
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+# `/users/logout` Endpoint Documentation
+
+## Description
+The `/users/logout` endpoint allows an authenticated user to log out. It invalidates the user's JWT token, preventing further access to protected resources without re-authentication.
+
+## HTTP Method
+`POST`
+
+## Endpoint
+`/users/logout`
+
+## Authorization
+A valid JWT token must be provided either as a cookie (`token`) or in the `Authorization` header as a Bearer token.
+
+## Successful Response
+
+A successful response will return a JSON object with the following structure:
+
+```json
+{
+  "message": "User logged out successfully"
+}
+```
