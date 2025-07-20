@@ -181,3 +181,93 @@ A successful response will return a JSON object with the following structure:
   "message": "User logged out successfully"
 }
 ```
+
+# `/captains/register` Endpoint Documentation
+
+## Description
+The `/captains/register` endpoint allows new captains to register. During registration, the system validates the provided details, including personal information and vehicle details. Upon successful registration, a JWT token and the captain details are returned.
+
+## HTTP Method
+`POST`
+
+## Endpoint
+`/captains/register`
+
+## Request Data Requirements
+
+The request body must be in JSON format and include the following fields:
+
+```json
+{
+  "fullname": {
+    "firstname": "string (min 3 characters)",
+    "lastname": "string (min 3 characters)"
+  },
+  "email": "string (valid email address)",
+  "password": "string (min 6 characters)",
+  "vehicle": {
+    "color": "string (min 3 characters)",
+    "model": "string (min 3 characters)",
+    "plate": "string (1-10 uppercase letters and/or numbers)",
+    "capacity": "integer (min 1)",
+    "vehicleType": "string (one of: 'car', 'bike', 'van', 'auto')"
+  }
+}
+```
+
+## Successful Response
+
+A successful response will return a JSON object with the following structure:
+
+```json
+{
+  "token": "JWT token string",
+  "captain": {
+    "_id": "captainID",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "if available",
+    "vehicle": {
+      "color": "Red",
+      "model": "Toyota",
+      "plate": "AB123CD",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  },
+  "message": "Captain registered successfully"
+}
+```
+
+## Error Response
+
+In case of validation errors, the response will contain an errors array with details about each error:
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Validation error message",
+      "param": "field name",
+      "location": "body"
+    }
+  ]
+}
+```
+## Example
+
+curl -X POST http://localhost:3000/captains/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": { "firstname": "John", "lastname": "Doe" },
+    "email": "john.doe@example.com",
+    "password": "password123",
+    "vehicle": {
+      "color": "Red",
+      "model": "Toyota",
+      "plate": "AB123CD",
+      "capacity": 4,
+      "vehicleType": "car"}}
