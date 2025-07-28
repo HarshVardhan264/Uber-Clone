@@ -1,30 +1,62 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { UserDataContext } from '../Context/UserContext.jsx'
 
 const UserSignup = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('') 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [userData, setUserData] = useState('')
+  // const [userData, setUserData] = useState('')
 
-  const submitHandler = (e) => {
-     e.preventDefault()
-     setFirstName('')
-     setLastName('')
-     setEmail('')
-     setPassword('')
-     setUserData({
-        fullName: {
-          firstName: firstName,
-          lastName: lastName
+  const navigate = useNavigate()
+  const {user, setUser } = React.useContext(UserDataContext)
+
+ const submitHandler = async (e) => {
+  e.preventDefault();
+
+  const newUser = {
+  fullname: {
+    firstname: firstName,
+    lastname: lastName
+  },
+  email,
+  password
+};
+
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/register`,
+      newUser,
+      {
+        headers: {
+          "Content-Type": "application/json",
         },
-        email: email,
-        password: password
-      })
-     
+      }
+    );
+
+    if (response.status === 201) {
+      const data = response.data;
+      setUser(data.user);                         // assuming you're using context
+      localStorage.setItem("token", data.token);
+      navigate("/home");
+
+      // Optional: clear form
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+    }
+  } catch (error) {
+    // 🛠️ This is the code you asked about — add it here:
+    console.error("Signup failed:", error.response?.data || error.message);
+    alert(error.response?.data?.message || "Signup failed");
   }
+};
+
 
   return (
      <div>

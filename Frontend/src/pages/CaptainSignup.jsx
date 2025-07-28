@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-// import { CaptainDataContext } from '../context/CapatainContext'
+import { Link, useNavigate } from 'react-router-dom'
+import { CaptainDataContext } from '../Context/CaptainContext.jsx'
+import axios from 'axios'
 
 const CaptainSignup = () => {
 
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
@@ -18,13 +19,13 @@ const CaptainSignup = () => {
   const [ vehicleType, setVehicleType ] = useState('')
 
 
-  // const { captain, setCaptain } = React.useContext(CaptainDataContext)
+  const { captain, setCaptain } = React.useContext(CaptainDataContext)
 
 
   const submitHandler = async (e) => {
     e.preventDefault()
     const captainData = {
-      fullName: {
+      fullname: {
         firstname: firstName,
         lastname: lastName
       },
@@ -39,14 +40,14 @@ const CaptainSignup = () => {
       }
     }
 
-    // const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
 
-    // if (response.status === 201) {
-    //   const data = response.data
-    //   setCaptain(data.captain)
-    //   localStorage.setItem('token', data.token)
-    //   navigate('/captain-home')
-    // }
+    if (response.status === 201) {
+      const data = response.data
+      setCaptain(data.captain)
+      localStorage.setItem('token', data.token)
+      navigate('/captain-home')
+    }
 
     setEmail('')
     setFirstName('')
@@ -170,8 +171,9 @@ const CaptainSignup = () => {
             >
               <option value="" disabled>Select Vehicle Type</option>
               <option value="car">Car</option>
+              <option value="bike">Bike</option>
+              <option value="van">Van</option>
               <option value="auto">Auto</option>
-              <option value="moto">Moto</option>
             </select>
           </div>
 
